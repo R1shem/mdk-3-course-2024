@@ -1,0 +1,118 @@
+drop database circusdb;
+create database circusdb;
+use circusdb;
+
+create table role(
+id int primary key,
+name varchar(15)
+);
+
+create table employee(
+id int auto_increment primary key,
+id_role int,
+name varchar(50),
+surname varchar(50),
+patronymic varchar(50),
+mail varchar(75) UNIQUE,
+login varchar(25) UNIQUE,
+password varchar(25),
+birthdate datetime,
+foreign key (id_role) references role(id)
+);
+
+create table artist_category(
+id int auto_increment primary key,
+name varchar(15)
+);
+
+create table artist(
+id int auto_increment primary key,
+id_artist_category int,
+name varchar(50),
+surname varchar(50),
+patronymic varchar(50),
+birthdate datetime,
+photo blob,
+foreign key (id_artist_category) references artist_category(id)
+);
+
+create table circus_stage(
+id int auto_increment primary key,
+name varchar(50),
+adress varchar(500),
+square double,
+photo blob,
+rental_price decimal,
+rental_end_date date
+);
+/*
+create table artists_work_log(
+id int auto_increment primary key,
+id_artist_category int,
+id_circus_stage int,
+id_employee int,
+artists_work_date date,
+artists_work_time time,
+foreign key (id_artist_category) references artist_category(id),
+foreign key (id_circus_stage) references circus_stage(id),
+foreign key (id_employee) references employee(id)
+);*/
+
+create table work_log(
+id int auto_increment primary key,
+id_employee int,
+show_date date,
+foreign key (id_employee) references employee(id)
+);
+
+create table performance_schedule(
+id int auto_increment primary key,
+id_circus_stage int,
+id_work_log int,
+title varchar(50),
+show_time time,
+foreign key (id_circus_stage) references circus_stage(id),
+foreign key (id_work_log) references work_log(id)
+);
+
+create table artist_performance_schedule(
+id int auto_increment primary key,
+id_artist int,
+id_performance_schedule int,
+foreign key (id_artist) references artist(id),
+foreign key (id_performance_schedule) references performance_schedule(id)
+);
+
+insert into role (id, name)
+values (1, 'Менеджер'),
+(2, 'Администратор');
+
+insert into employee (id_role, name, surname, patronymic, mail, login, password, birthdate)
+value (1, 'Дарт','Вейдер', null, 'supercool2000@gmail.com', 'dartveyder', '12345', '2003-03-23'),
+(2, 'Люк','Скайвокер','Дартейдерович', 'nutipamail@yandex.ru', 'lukskayvoker', '321', '1993-03-23');
+
+/* insert into artist()
+id_artist_category int,
+name varchar(50),
+surname varchar(50),
+patronymic varchar(50),
+birthdate datetime, */
+/* insert into artist_category(name)
+values(); */
+
+insert into circus_stage(name, adress, square, rental_price, rental_end_date)
+values('Шанхацский цирковой мир', 'Шанхай, 2266, Новая дорога Гонхэ.', 22, 1000000, '2024-12-30');
+
+insert into artist_category(name)
+values('Клоун'),
+('Гимнаст'),
+('Иллюзионист'),
+('Преподаватель'),
+('Жонглёр');
+
+insert into artist(id_artist_category,name,surname,patronymic,birthdate)
+values(1, 'Ришат', 'Хемраев', 'Лимонович', '2006-10-30'),
+(1, 'Артур', 'Сафаров', 'Апельсинович', '2006-09-30'),
+(1, 'Гадя', 'Петрова', 'Хренович', '2006-10-30'),
+(1, 'Пьеро', 'Буратинов', 'Мальвинович', '2006-09-30'),
+(1, 'Аркадий', 'Паровозов', 'Дядястёпович', '2006-10-30');
